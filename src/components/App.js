@@ -1,11 +1,29 @@
 import '../styles/App.scss';
 import characters from '../data/characters.json';
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
+import objectToExport from '../services/localstorage';
 
 function App() {
-  const[quotes, setQuotes] = useState(characters)
+  const[quotes, setQuotes] = useState(objectToExport.get ('local', characters) );
   const [filterQuotes, setFilterQuotes] = useState ('');
   const [filterCharacters, setFilterCharacters] = useState('Personajes');
+  const [newPhrase, setNewPhrase] = useState({
+    quote: '',
+    character: '',
+  });
+  const [beta, setBeta] = useState([]);
+
+
+   useEffect(() => {
+    fetch(
+      'https://beta.adalab.es/curso-intensivo-fullstack-recursos/apis/quotes-friends-tv-v1/quotes.json'
+    )
+      .then((response) => response.json())
+      .then((fetchData) => {
+        setBeta(fetchData);
+      });
+  }, []);
+
 
   const handleQuote = (event)=> {
       setFilterQuotes(event.target.value);
@@ -15,9 +33,20 @@ function App() {
       setFilterCharacters(event.target.value)
   }
 
+  const handleNewPhrase = (ev) => {
+    setNewPhrase({ ...newPhrase, [ev.target.id]: ev.target.value });
+  };
+
+  const handleClickAdd = (ev) => {
+    ev.preventDefault();
+    setQuotes([...characters, newPhrase]);
+    setNewPhrase({ quote: '', character: '' });
+  };
+
 
   const renderListQuotes = () => {
-    return characters 
+    objectToExport.set('local', quotes);
+    return quotes 
       .filter ((eachQuote)=> {
         return (eachQuote.quote.toLowerCase().includes(filterQuotes.toLowerCase()))
       })
@@ -31,9 +60,9 @@ function App() {
       })
       .map ((eachQuote, index)=>{
         return (
-          <li key={index} className='card'>
-            <p>{eachQuote.quote}</p>
-            <p>{eachQuote.character}</p>
+          <li className="list-quotes_item" key={index} >
+            <p className='list-quotes_item_quote'>{eachQuote.quote}</p>
+            <p className='list-quotes_item_character'>{eachQuote.character}</p>
           </li>
         )
       })
@@ -42,12 +71,12 @@ function App() {
   return ( 
   <div 
     className="App">
-      <header>
-          <h1> FRASES DE FRIENDS</h1>
-        <form>
-          <label htmlFor='searchQuotes'>
-            Firltar por frase
-          <input 
+      <header className='container-title'>
+          <h1 className='title'> FRASES DE FRIENDS</h1>
+        <form className='form'>
+          <label className='form-quotes' htmlFor='searchQuotes'>
+            Filtrar por frase: 
+          <input className='form-quotes_text'
           type= 'text'
           id='Quotes'
           onChange ={handleQuote}
@@ -55,9 +84,10 @@ function App() {
           >
           </input>
           </label>
-          <label htmlFor='searchCharacters'>
+          <label className='form-characters' htmlFor='searchCharacters'>
             Firltar por personajes:
-          <select name='character' id='character' onChange={handleCharacter}>
+          </label>
+          <select className='form-characters_select' name='character' id='character' onChange={handleCharacter} value={filterCharacters}>
             <option value='Personajes'>Personajes </option>
             <option value='Ross'> Ross </option>
             <option value='Joey'> Joey </option>
@@ -66,13 +96,50 @@ function App() {
             <option value='Rachel'> Rachel </option>
             <option value='Mónica'> Mónica </option>
           </select>
-          </label>
+          
         </form>
       </header>
-      <main>
-        <ul>
-          {renderListQuotes()}
-        </ul>
+      <main className='main'>
+        <section className='containter-quotes'> 
+          <ul className='list-quotes'>
+            {renderListQuotes()}
+          </ul>
+        </section>
+        <section className='container-newPhrase'>
+         <form action="">
+           <h2 className='title-newPhrase'>Añade nueva frase</h2>
+           <label htmlFor=""> Frase: 
+             <input
+                className="new-quote__input"
+                type="text"
+                name="quote"
+                id="quote"
+                placeholder='frase'
+                onInput={handleNewPhrase}
+                value={newPhrase.quote}
+              />
+           </label>
+           <label htmlFor=""> Personaje: 
+ 
+             <input
+                className="new-character__input"
+                type="text"
+                name="character"
+                id="character"
+                placeholder="Personaje"
+                onInput={handleNewPhrase}
+                value={newPhrase.character}
+              />
+           </label>
+            
+            <input
+              className="new-quote-btn"
+              type="submit"
+              value="Añadir"
+              onClick={handleClickAdd}
+            />
+          </form>
+        </section>
       </main>
   </div>
   );

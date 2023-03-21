@@ -1,1 +1,96 @@
-/* Aquí van tus estilos */
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+html {
+    font-size: 62.5%;
+}
+
+.container-title{
+    background-color: aquamarine;
+    padding: 3rem 0 1rem 0;
+}
+.title {
+    font-size: 3rem;
+    text-align: center;
+        background-color: aquamarine;
+}
+
+.form {
+    margin: 3rem ;
+    font-size: 1.4rem;
+    text-align: center;
+
+    &-quotes{
+        margin: 0 3rem 0 0;
+        font-weight: 700;
+
+        &_text {
+            margin-left: 1rem;
+            font-weight: 200; 
+            padding: 0.5rem;
+        }
+
+    }
+
+    &-characters {
+        font-weight: 700;
+            &_select {
+                margin-left: 1rem;
+                padding: 0.5rem;
+            }
+    }
+} 
+
+.main{
+    background-image: url(../images/img_2593-1.webp);
+    background-size: 35%;
+}
+.list-quotes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 0 3rem 3rem 3rem;
+
+    &_item {
+        font-size: 1.4rem;
+        margin: 1rem 1.5rem;
+        padding: 1.5rem;
+        list-style: none;
+        border: 2px solid aquamarine;
+        border-radius: 5rem;
+        text-align: center;
+        background-color: white;
+
+        &_quote{
+            line-height: 2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-style: oblique;
+            
+        }
+    }
+
+}
+
+.container-newPhrase {
+    background-color: rgb(185, 216, 209);
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.4rem;
+}
+
+.title-newPhrase {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.new-quote__input{
+    margin: 1rem 1rem 1rem 0;
+
+}
+
+.new-quote-btn{
+    margin-left: 1rem;
+}
